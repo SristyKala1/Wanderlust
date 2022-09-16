@@ -14,7 +14,11 @@ public class Booking{
 	 private Integer noOfPeople;
 	 private Float totalCost;
 	 private LocalDateTime timeOfBooking = LocalDateTime.now();
+	 @OneToOne(cascade = CascadeType.ALL)
+     @JoinColumn(name = "destination_id", unique = true)
 	 private Destination destinationEntity;
+	 @ManyToOne(cascade = CascadeType.ALL)
+	 @JoinColumn(name = "user_id")
 	 private User userEntity;
 	 
 	public Integer getBookingId() {
