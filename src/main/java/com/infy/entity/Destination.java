@@ -19,7 +19,7 @@ public class Destination {
 	private Float rating;
 	private Float noOfRating;
 	private Integer availability;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id", unique = true)
 	private Details detailsEntity;
 	
