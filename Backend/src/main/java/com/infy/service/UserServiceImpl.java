@@ -12,6 +12,7 @@ import com.infy.entity.User;
 import com.infy.exception.WanderLustException;
 import com.infy.repository.UserRepository;
 import com.infy.utility.HashingUtility;
+import com.infy.validator.UserValidator;
 
 @Service(value = "userService")
 @Transactional
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String registerUser(UserDTO user) throws WanderLustException {
+		UserValidator.validateUserForRegister(user);
 		if (userRepository.findByContactNumber(user.getContactNumber()) != null)
 			throw new WanderLustException("UserService.CONTACT_NUMBER_ALREADY_EXISTS");
 		try {
