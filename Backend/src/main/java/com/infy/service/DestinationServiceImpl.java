@@ -14,6 +14,7 @@ import com.infy.dto.ItineraryDTO;
 import com.infy.entity.Destination;
 import com.infy.exception.WanderLustException;
 import com.infy.repository.DestinationRepository;
+import com.infy.validator.DestinationSearchValidator;
 
 @Service(value="destinationService")
 @Transactional
@@ -25,6 +26,7 @@ public class DestinationServiceImpl implements DestinationService {
 	//Methord to Search the Destination or packages
 	public List<DestinationDTO> getDestination(String continent) throws Exception{
 		
+		DestinationSearchValidator.validateSearch(continent);
 		List<Destination> destcontinent=destinationRepository.findByContinentIgnoreCase(continent);
 		List<DestinationDTO> destinationDTOList=new ArrayList<DestinationDTO>();
 		if(destcontinent.isEmpty()) {
