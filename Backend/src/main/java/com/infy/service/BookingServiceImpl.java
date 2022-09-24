@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.io.*;
 
 import javax.transaction.Transactional;
 
@@ -20,6 +19,7 @@ import com.infy.entity.Destination;
 import com.infy.entity.Details;
 import com.infy.entity.Itinerary;
 import com.infy.entity.User;
+import com.infy.exception.WanderLustException;
 import com.infy.repository.BookingRepository;
 import com.infy.repository.DestinationRepository;
 import com.infy.repository.UserRepository;
@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService{
 	
 	
 //	@Override
-	public Integer addBooking(BookingDTO bookingDTO,Integer userId,String destinationId) throws Exception {
+	public Integer addBooking(BookingDTO bookingDTO,Integer userId,String destinationId) throws WanderLustException {
 		
 		try {
 		Booking booking = new Booking();
@@ -50,6 +50,8 @@ public class BookingServiceImpl implements BookingService{
 		booking.setTimeOfBooking(date);
 		
 		Destination destination=destinationRepository.findByDestinationId(destinationId);
+		if(destination==null)
+			throw new WanderLustException("BookingService.INVALID_BOOKINGS");
 		booking.setCheckOut(bookingDTO.getCheckIn().plusDays(destination.getNoOfNights()));
 		Optional<User> optional=userRepository.findById(userId);
 		User user=optional.orElseThrow(() -> new WanderLustException("BookingService.INVALID_BOOKINGS"));
@@ -62,12 +64,19 @@ public class BookingServiceImpl implements BookingService{
 		bookingRepository.save(booking);
 		return booking.getBookingId();
 		}
+		catch(Exception e)
+		{
+			throw new WanderLustException("BookingService.INVALID_DATE");
+		}
 	}
 	
-	public List<BookingDTO> getViewBooking(Integer userId) throws Exception {
+	public List<BookingDTO> getViewBooking(Integer userId) throws WanderLustException {
 		
 		List<Booking> bookingList = bookingRepository.findByBookUserId(userId);
 		List<BookingDTO> bookingDtoList = new ArrayList<BookingDTO>();
+		if(bookingList.isEmpty()) {
+			throw new WanderLustException("BookingService.INVALID_BOOKINGS");
+		}
 		
 		for(Booking booking: bookingList) {
 			BookingDTO bookingDTO = new BookingDTO();
@@ -109,11 +118,12 @@ public class BookingServiceImpl implements BookingService{
 		return bookingDtoList;
 	}
 	
-	public Float cancelBooking(Integer bookingId) throws Exception {
+	public Float cancelBooking(Integer bookingId) throws WanderLustException {
 		
 		Float refundAmount=null;
 
 		Optional<Booking> optional=bookingRepository.findById(bookingId);
+		Booking booking=optional.orElseThrow(() -> new WanderLustException("No bookings available"));
 
 		booking.getDestinationEntity().setAvailability(booking.getDestinationEntity().getAvailability()+booking.getNoOfPeople());
 		booking.setDestinationEntity(null);
@@ -124,7 +134,7 @@ public class BookingServiceImpl implements BookingService{
 		return refundAmount;
 	}
 	
-	public DestinationDTO getDestinationDetails(String destinationId) throws Exception {
+	public DestinationDTO getDestinationDetails(String destinationId) throws WanderLustException {
 		
 		Destination destination=destinationRepository.findByDestinationId(destinationId);
 		DestinationDTO destinationDTO=new DestinationDTO();
@@ -160,6 +170,8 @@ public class BookingServiceImpl implements BookingService{
 			destinationDTO.setDetailsDTO(detailsDTO);
 			return destinationDTO;
 		}
+		else 
+			throw new WanderLustException("No destinations available");
 	}
 	
 }
