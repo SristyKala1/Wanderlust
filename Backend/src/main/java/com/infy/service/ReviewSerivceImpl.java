@@ -24,6 +24,7 @@ package com.infy.service;
 			import com.infy.repository.BookingRepository;
 			import com.infy.repository.DestinationRepository;
 			import com.infy.repository.ReviewRepository;
+			import com.infy.validator.ReviewValidator;
 
 
 			@Service(value="reviewService")
@@ -42,6 +43,7 @@ package com.infy.service;
 				@Override
 				public List<ReviewDTO> searchReview(Integer userId) throws WanderLustException
 				{
+					ReviewValidator.validatorUserId(userId);
 					ReviewDTO reviewDTO=new ReviewDTO();
 					
 					List<Review> review=reviewRepository.findByReviewBookingUserUserID(userId);
@@ -181,6 +183,7 @@ package com.infy.service;
 				@Override
 				public ReviewDTO addReview(ReviewDTO reviewDTO) throws WanderLustException
 				{
+					ReviewValidator.validateReview(reviewDTO);
 					Optional<Booking> optional = bookingRepository.findById(reviewDTO.getBooking().getBookingId());
 					Booking booking=optional.orElseThrow(() -> new WanderLustException("NO_BOOKINGS_FOUND"));
 					Review review = new Review();
