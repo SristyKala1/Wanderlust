@@ -23,6 +23,7 @@ import com.infy.exception.WanderLustException;
 import com.infy.repository.BookingRepository;
 import com.infy.repository.DestinationRepository;
 import com.infy.repository.UserRepository;
+import com.infy.validator.BookingValidator;
 
 @Service(value = "bookingService")
 @Transactional
@@ -40,6 +41,7 @@ public class BookingServiceImpl implements BookingService{
 	
 //	@Override
 	public Integer addBooking(BookingDTO bookingDTO,Integer userId,String destinationId) throws WanderLustException {
+		BookingValidator.validateBooking(bookingDTO);
 		
 		try {
 		Booking booking = new Booking();
