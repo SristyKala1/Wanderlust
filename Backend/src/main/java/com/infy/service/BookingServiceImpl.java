@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService{
 	
 //	@Override
 	public Integer addBooking(BookingDTO bookingDTO,Integer userId,String destinationId) throws WanderLustException {
-		BookingValidator.validateBooking(bookingDTO);
+		//BookingValidator.validateBooking(bookingDTO);
 		
 		try {
 		Booking booking = new Booking();
