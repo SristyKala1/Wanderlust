@@ -7,7 +7,11 @@ export const backendUrlBooking_checkItinerary = "http://localhost:4000/Wanderlus
 
 export const backendUrlCheckItinerary = "http://localhost:4000/Wanderlust_Server/BookingAPI/checkItinerary/";
 
+export const backendUrlListOfBooking = "http://localhost:4000/Wanderlust_Server/BookingAPI/viewBooking/";
+export const backendUrlDeleteBooking = "http://localhost:4000/Wanderlust_Server/BookingAPI/deleteBooking/";
+
 export const backendUrlViewReview = "http://localhost:4000/Wanderlust_Server/ReviewAPI/viewReview/";
+export const backendUrlAddReview = "http://localhost:4000/Wanderlust_Server/ReviewAPI/addReview/";
 
 
 
